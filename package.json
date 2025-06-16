@@ -1,0 +1,28 @@
+{
+  "name": "gestion-de-jeux",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "concurrently \"rimraf server/dist\" \"npx tsc\"",
+    "start": "node server/dist/index.js",
+    "server": "concurrently \"npx tsc -w\" \"nodemon --inspect server/dist/index.js\"",
+    "client": "concurrently \"cd ./client && npm run dev\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-client-packages": "concurrently \"cd ./client && npm i\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3"
+  }
+}
