@@ -2,6 +2,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import HomeNavbarCTA from "./HomeNavbarCTA";
 import Modal from "../../components/Modal";
 import { useState } from "react";
+import StatiGamesLogo from "../../components/StatiGamesLogo";
 
 const HomeNavbar = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -15,10 +16,9 @@ const HomeNavbar = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="navbar shadow p-4 justify-between">
-        <h1 className="text-2xl font-bold">StatiGames</h1>
-
+    <div className="p-4 absolute top-0 w-full z-50">
+      <div className="navbar shadow p-4 justify-between bg-base-100 h-16">
+        <StatiGamesLogo />
         {/* for mobile */}
         <div className="md:hidden">
           <button className="btn btn-square" onClick={handleClickOpenModal}>

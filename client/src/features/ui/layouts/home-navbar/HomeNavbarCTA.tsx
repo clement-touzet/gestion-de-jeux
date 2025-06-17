@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import StartFreeLink from "../../components/StartFreeLink";
 
 const HomeNavbarCTA = () => {
   return (
@@ -6,9 +7,7 @@ const HomeNavbarCTA = () => {
       <Link to="/" className="link">
         Se connecter
       </Link>
-      <Link to="/" className="btn">
-        Démarrer gratuitement
-      </Link>
+      <StartFreeLink />
     </div>
   );
 };
