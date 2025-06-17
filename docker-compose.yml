@@ -1,0 +1,16 @@
+services:
+  db:
+    container_name: postgres-statigames
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres-data-statigames:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432
+volumes:
+  postgres-data-statigames:
+  # no admirer as drizzle already have an admin database panel.

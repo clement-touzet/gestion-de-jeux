@@ -10,6 +10,11 @@ https://drive.google.com/file/d/19sf1EQsVrzR73O4Lgcv9n4f_YNUbnNbP/view?usp=shari
 ```
 npm i
 npm run install-client-packages
+docker compose up
 npm run dev
 ```
-
+# Base de données et Drizzle
+## interface admin de la base de données : 
+```
+npm run db:studio
+```

@@ -28,7 +28,9 @@ const RegisterForm = () => {
         {/* <div>
           <a className="link link-hover">Mot de passe oublié?</a>
         </div> */}
-        <button className="btn btn-primary mt-4">Valider l'inscription</button>
+        <button type="submit" className="btn btn-primary mt-4">
+          Valider l'inscription
+        </button>
       </fieldset>
     </form>
   );

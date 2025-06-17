@@ -8,7 +8,10 @@
     "server": "concurrently \"npx tsc -w\" \"nodemon --inspect server/dist/index.js\"",
     "client": "concurrently \"cd ./client && npm run dev\"",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install-client-packages": "concurrently \"cd ./client && npm i\""
+    "install-client-packages": "concurrently \"cd ./client && npm i\"",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "node -r esbuild-register ./server/db/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,13 +19,19 @@
   "description": "",
   "dependencies": {
     "concurrently": "^9.1.2",
+    "dotenv": "^16.5.0",
+    "dotenv-expand": "^12.0.2",
+    "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
+    "postgres": "^3.4.7",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.3"
+    "@types/node": "^24.0.3",
+    "drizzle-kit": "^0.31.1"
   }
 }

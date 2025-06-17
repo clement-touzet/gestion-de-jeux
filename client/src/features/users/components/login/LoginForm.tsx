@@ -25,7 +25,9 @@ const LoginForm = () => {
             Mot de passe oublié?
           </Link>
         </div>
-        <button className="btn btn-primary mt-4">Se connecter</button>
+        <button type="submit" className="btn btn-primary mt-4">
+          Se connecter
+        </button>
       </fieldset>
     </form>
   );
