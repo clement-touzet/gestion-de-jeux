@@ -3,13 +3,14 @@ import db from "../db/db";
 import { userTable } from "../db/schemas";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import jwt from "jsonwebtoken";
-
-import env from "../../env";
 import getRefreshJWT from "../utils/getRefreshJWT";
 import getAccessJWT from "../utils/getAccessJWT";
+import jwt from "jsonwebtoken";
+import env from "../../env";
 
 const router = express.Router();
+
+// REGISTER
 
 router.post("/register", async (req, res) => {
   if (!req.body?.pseudonym || !req.body?.email || !req.body?.password) {
@@ -56,6 +57,8 @@ router.post("/register", async (req, res) => {
   });
 });
 
+// LOGIN
+
 router.post("/login", async (req, res) => {
   // check if email and password are provided
   if (!req.body?.email || !req.body?.password) {
@@ -100,6 +103,79 @@ router.post("/login", async (req, res) => {
   } else {
     res.status(401).json({ sucess: false, message: "Wrong password" });
   }
+});
+
+// LOGOUT
+
+router.get("/logout", async (req, res) => {
+  // on client, also delete the access token !
+  if (!req.cookies?.jwt) {
+    res.sendStatus(204); // no content
+    return;
+  }
+
+  // get  refresh token from cookies
+  const refreshToken = req.cookies?.jwt;
+  if (typeof refreshToken !== "string") {
+    res.sendStatus(400); // the token must be a string
+    return;
+  }
+
+  // find user from refresh token
+  const userFound = await db.query.userTable.findFirst({
+    where: eq(userTable.refreshToken, refreshToken),
+  });
+  if (!userFound) {
+    res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.sendStatus(204);
+    return;
+  }
+
+  // delete the refresh token
+  await db
+    .update(userTable)
+    .set({ refreshToken: "" })
+    .where(eq(userTable.id, userFound.id));
+
+  res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // secure :true - only serves on https when in production
+  res.sendStatus(204);
+});
+
+// REFRESH TOKEN
+
+router.get("/refresh", async (req, res) => {
+  if (!req.cookies || !req.cookies?.jwt) {
+    res.sendStatus(401);
+    return;
+  }
+
+  // get refresh token from cookies
+  const cookies = req.cookies;
+  const refreshToken = cookies.jwt;
+  if (typeof refreshToken !== "string") {
+    res.sendStatus(400); // the token must be a string
+    return;
+  }
+
+  // find user from refresh token
+  const userFound = await db.query.userTable.findFirst({
+    where: eq(userTable.refreshToken, refreshToken),
+  });
+  if (!userFound) {
+    res.sendStatus(403); // forbidden
+    return;
+  }
+
+  // verify the refresh token is still valid, and if so, refresh the access token
+  jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, decodedUserId) => {
+    if (err || userFound.id !== decodedUserId) {
+      res.sendStatus(403);
+      return;
+    }
+
+    const accessToken = getAccessJWT(decodedUserId);
+    res.json({ accessToken });
+  });
 });
 
 export default router;
