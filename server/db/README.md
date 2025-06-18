@@ -1,0 +1,1 @@
+don't forget to update the corresponding index.ts file when adding new schema files.

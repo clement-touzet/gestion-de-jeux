@@ -1,0 +1,29 @@
+import { NextFunction, Request, Response } from "express";
+import env from "../../env";
+import jwt from "jsonwebtoken";
+
+// middleware to protect api routes. It verify the jwt access token in authorization headers are valid
+const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    res.sendStatus(401);
+    return;
+  }
+  const token = authHeader.split(" ")[1]; //because authHeader should be "Bearer [token]"
+
+  if (!token) {
+    res.status(400).send({
+      sucess: false,
+      message: "No token found in authorization header",
+    });
+    return;
+  }
+
+  jwt.verify(token, env.ACCESS_TOKEN_SECRET, (err, decodedUserId) => {
+    if (err) return res.sendStatus(403);
+    (req as any).userId = decodedUserId;
+    next();
+  });
+};
+
+export default verifyJWT;

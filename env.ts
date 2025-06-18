@@ -10,8 +10,10 @@ const EnvSchema = z.object({
   DB_PASSWORD: z.string(),
   DB_NAME: z.string(),
   DB_PORT: z.coerce.number(),
-
   DB_URL: z.string(),
+  JWT_SECRET: z.string(),
+  ACCESS_TOKEN_SECRET: z.string(),
+  REFRESH_TOKEN_SECRET: z.string(),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;
