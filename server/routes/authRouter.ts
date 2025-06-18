@@ -49,12 +49,12 @@ router.post("/register", async (req, res) => {
       .returning()
   )[0];
 
-  const token = getRefreshJWT(insertedUser.id);
+  const accessToken = getAccessJWT(insertedUser.id);
   res.status(201).send({
     success: true,
     message: "Inserted",
     insertedUserId: insertedUser.id,
-    token,
+    accessToken,
   });
 });
 

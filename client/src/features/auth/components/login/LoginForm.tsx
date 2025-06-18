@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { SubmitHandler, useForm } from "react-hook-form";
+import useAccessToken from "../../hooks/useAccessToken";
 
 type Inputs = {
   email: string;
@@ -15,6 +16,7 @@ const LoginForm = () => {
     setError,
   } = useForm<Inputs>();
   const navigate = useNavigate();
+  const { setAccessToken } = useAccessToken();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const result = await fetch("/api/auth/login", {
@@ -23,9 +25,10 @@ const LoginForm = () => {
       credentials: "include",
       body: JSON.stringify(data),
     });
-
+    const resultJson = await result.json();
     console.log("login result", result);
     if (result.status === 200) {
+      setAccessToken(resultJson.accessToken);
       navigate({
         to: "/dashboard",
       });
@@ -33,9 +36,7 @@ const LoginForm = () => {
       console.log("error");
       setError("root.error", {
         type: result.status.toString(),
-        message:
-          (await result.json()).message ||
-          "An error occurred, please try later",
+        message: resultJson.message || "An error occurred, please try later",
       });
     }
   };
