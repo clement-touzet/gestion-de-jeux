@@ -19,9 +19,9 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  jwt.verify(token, env.ACCESS_TOKEN_SECRET, (err, decodedUserId) => {
+  jwt.verify(token, env.ACCESS_TOKEN_SECRET, (err, decodedUser: any) => {
     if (err) return res.sendStatus(403);
-    (req as any).userId = decodedUserId;
+    (req as any).userId = decodedUser.userId;
     next();
   });
 };

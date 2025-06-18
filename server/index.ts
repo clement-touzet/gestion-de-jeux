@@ -20,7 +20,7 @@ app.use("/api/auth", authRouter);
 
 // all the routes below are protected
 app.use(verifyJWT);
-app.use("/api/game-reviews", gameReviewRouter);
+app.use("/api/games-reviews", gameReviewRouter);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);

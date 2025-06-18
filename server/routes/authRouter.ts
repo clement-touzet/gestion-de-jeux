@@ -1,6 +1,6 @@
 import express from "express";
 import db from "../db/db";
-import { userTable } from "../db/schemas";
+import { usersTable } from "../db/schemas";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import getRefreshJWT from "../utils/getRefreshJWT";
@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import env from "../../env";
 
 const router = express.Router();
+const JWT_COOKIE_NAME = "jwt";
 
 // REGISTER
 
@@ -24,8 +25,8 @@ router.post("/register", async (req, res) => {
   const { pseudonym, email, password } = req.body;
 
   // verify the email isn't already taken
-  const userFound = await db.query.userTable.findFirst({
-    where: eq(email, userTable.email),
+  const userFound = await db.query.usersTable.findFirst({
+    where: eq(email, usersTable.email),
   });
 
   if (userFound) {
@@ -39,7 +40,7 @@ router.post("/register", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const insertedUser = (
     await db
-      .insert(userTable)
+      .insert(usersTable)
       .values({
         email,
         pseudonym,
@@ -71,8 +72,8 @@ router.post("/login", async (req, res) => {
 
   // check if user is registered
   const { email, password } = req.body;
-  const userFound = await db.query.userTable.findFirst({
-    where: eq(email, userTable.email),
+  const userFound = await db.query.usersTable.findFirst({
+    where: eq(usersTable.email, email),
   });
   if (!userFound) {
     res.status(401).json({
@@ -91,11 +92,11 @@ router.post("/login", async (req, res) => {
 
     // save refresh token in db
     await db
-      .update(userTable)
+      .update(usersTable)
       .set({ refreshToken })
-      .where(eq(userTable.id, userFound.id));
+      .where(eq(usersTable.id, userFound.id));
 
-    res.cookie("refreshJwt", refreshToken, {
+    res.cookie(JWT_COOKIE_NAME, refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     }); // max age : 24h // http only so javascript can't access it on the frontend
@@ -109,57 +110,64 @@ router.post("/login", async (req, res) => {
 
 router.get("/logout", async (req, res) => {
   // on client, also delete the access token !
-  if (!req.cookies?.jwt) {
+
+  // get  refresh token from cookies
+  const refreshToken = req.cookies?.[JWT_COOKIE_NAME];
+  if (!refreshToken) {
     res.sendStatus(204); // no content
     return;
   }
 
-  // get  refresh token from cookies
-  const refreshToken = req.cookies?.jwt;
   if (typeof refreshToken !== "string") {
     res.sendStatus(400); // the token must be a string
     return;
   }
 
   // find user from refresh token
-  const userFound = await db.query.userTable.findFirst({
-    where: eq(userTable.refreshToken, refreshToken),
+  const userFound = await db.query.usersTable.findFirst({
+    where: eq(usersTable.refreshToken, refreshToken),
   });
   if (!userFound) {
-    res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.clearCookie(JWT_COOKIE_NAME, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     res.sendStatus(204);
     return;
   }
 
   // delete the refresh token
   await db
-    .update(userTable)
+    .update(usersTable)
     .set({ refreshToken: "" })
-    .where(eq(userTable.id, userFound.id));
+    .where(eq(usersTable.id, userFound.id));
 
-  res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // secure :true - only serves on https when in production
+  res.clearCookie(JWT_COOKIE_NAME, {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+  }); // secure :true - only serves on https when in production
   res.sendStatus(204);
 });
 
 // REFRESH TOKEN
 
 router.get("/refresh", async (req, res) => {
-  if (!req.cookies || !req.cookies?.jwt) {
+  console.log("refresh", req.cookies);
+  const refreshToken = req.cookies?.[JWT_COOKIE_NAME];
+  if (!refreshToken) {
     res.sendStatus(401);
     return;
   }
 
   // get refresh token from cookies
-  const cookies = req.cookies;
-  const refreshToken = cookies.jwt;
   if (typeof refreshToken !== "string") {
     res.sendStatus(400); // the token must be a string
     return;
   }
 
   // find user from refresh token
-  const userFound = await db.query.userTable.findFirst({
-    where: eq(userTable.refreshToken, refreshToken),
+  const userFound = await db.query.usersTable.findFirst({
+    where: eq(usersTable.refreshToken, refreshToken),
   });
   if (!userFound) {
     res.sendStatus(403); // forbidden
@@ -167,15 +175,18 @@ router.get("/refresh", async (req, res) => {
   }
 
   // verify the refresh token is still valid, and if so, refresh the access token
-  jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, decodedUserId) => {
-    if (err || userFound.id !== decodedUserId) {
-      res.sendStatus(403);
-      return;
+  jwt.verify(
+    refreshToken,
+    env.REFRESH_TOKEN_SECRET,
+    (err, decodedUser: any) => {
+      if (err || userFound.id !== decodedUser.userId) {
+        res.sendStatus(403);
+        return;
+      }
+      const accessToken = getAccessJWT(decodedUser.userId);
+      res.json({ accessToken });
     }
-
-    const accessToken = getAccessJWT(decodedUserId);
-    res.json({ accessToken });
-  });
+  );
 });
 
 export default router;

@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
-export const userTable = pgTable("user", {
+export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   pseudonym: varchar("pseudonym", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -8,5 +8,5 @@ export const userTable = pgTable("user", {
   refreshToken: varchar("refresh_token", { length: 255 }),
 });
 
-export type UserType = typeof userTable.$inferSelect;
-export type InsertUserType = typeof userTable.$inferInsert;
+export type UserType = typeof usersTable.$inferSelect;
+export type InsertUserType = typeof usersTable.$inferInsert;

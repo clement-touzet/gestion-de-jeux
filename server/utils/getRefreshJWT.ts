@@ -3,8 +3,8 @@ import env from "../../env";
 import { UserType } from "../db/schemas";
 
 const getRefreshJWT = (userId: UserType["id"]) => {
-  return jwt.sign(userId, env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d", // expires 30d
+  return jwt.sign({ userId }, env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "30d", // expires 30d
   });
 };
 
