@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
-import HomeNavbarCTA from "../layouts/home-navbar/HomeNavbarCTA";
 
-type Props = { visible: boolean; onClose?: () => void };
+type Props = {
+  visible: boolean;
+  onClose?: () => void;
+} & React.PropsWithChildren;
 
-const Modal = ({ visible, onClose }: Props) => {
+const Modal = ({ visible, onClose, children }: Props) => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -43,9 +45,7 @@ const Modal = ({ visible, onClose }: Props) => {
         className="modal"
         onCancel={handleESC}
       >
-        <div className="modal-box">
-          <HomeNavbarCTA />
-        </div>
+        <div className="modal-box">{children}</div>
         {/* close the modal when clicked outside */}
         <form
           method="dialog"

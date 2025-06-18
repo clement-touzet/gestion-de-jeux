@@ -24,10 +24,12 @@ const HomeNavbar = () => {
           <button className="btn btn-square" onClick={handleClickOpenModal}>
             <RxHamburgerMenu />
           </button>
-          <Modal visible={isModalVisible} onClose={onModalClose} />
+          <Modal visible={isModalVisible} onClose={onModalClose}>
+            <HomeNavbarCTA />
+          </Modal>
         </div>
 
-        {/* not for mobiile */}
+        {/* not for mobile */}
         <div className="hidden md:block">
           <HomeNavbarCTA />
         </div>
