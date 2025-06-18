@@ -78,7 +78,7 @@ router.post("/login", async (req, res) => {
   if (!userFound) {
     res.status(401).json({
       success: false,
-      message: "You must register to be able to log in",
+      message: "Aucun compte trouvé pour cette adresse email.",
     }); // unauthorized
     return;
   }
@@ -102,7 +102,7 @@ router.post("/login", async (req, res) => {
     }); // max age : 24h // http only so javascript can't access it on the frontend
     res.json({ success: true, accessToken }); // for the frontend, store that in memory (in state, not cookies or local storage)
   } else {
-    res.status(401).json({ sucess: false, message: "Wrong password" });
+    res.status(401).json({ sucess: false, message: "Mot de passe incorrect" });
   }
 });
 
