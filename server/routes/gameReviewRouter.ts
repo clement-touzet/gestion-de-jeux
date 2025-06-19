@@ -4,7 +4,7 @@ const router = express.Router();
 router
   .route("/")
   .get((req, res) => {
-    res.send("voici la liste des review de jeux ");
+    res.json([]);
   })
   .post((req, res) => {
     res.send("post game review: l'utilisateur pourra créer une review ici");

@@ -100,7 +100,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     }); // max age : 24h // http only so javascript can't access it on the frontend
-    res.json({ success: true, accessToken }); // for the frontend, store that in memory (in state, not cookies or local storage)
+    res.json({ success: true, accessToken, userId: userFound.id }); // for the frontend, store that in memory (in state, not cookies or local storage)
   } else {
     res.status(401).json({ sucess: false, message: "Mot de passe incorrect" });
   }

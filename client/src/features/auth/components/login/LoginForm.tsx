@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { SubmitHandler, useForm } from "react-hook-form";
-import useAccessToken from "../../hooks/useAccessToken";
+import useAuth from "../../hooks/useAuth";
 
 type Inputs = {
   email: string;
   password: string;
 };
+
+const LOGIN_API_URL = "/api/auth/login";
 
 const LoginForm = () => {
   const {
@@ -16,10 +18,10 @@ const LoginForm = () => {
     setError,
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  const { setAccessToken } = useAccessToken();
+  const { setAuth } = useAuth();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const result = await fetch("/api/auth/login", {
+    const result = await fetch(LOGIN_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -28,7 +30,11 @@ const LoginForm = () => {
     const resultJson = await result.json();
     console.log("login result", result);
     if (result.status === 200) {
-      setAccessToken(resultJson.accessToken);
+      setAuth((prev) => ({
+        ...prev,
+        accessToken: resultJson.accessToken,
+        userId: resultJson.userId,
+      }));
       navigate({
         to: "/dashboard",
       });

@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import classnames from "classnames";
 import { useNavigate } from "@tanstack/react-router";
-import useAccessToken from "../../hooks/useAccessToken";
+import useAuth from "../../hooks/useAuth";
 
 type Inputs = {
   pseudonym: string;
@@ -17,7 +17,7 @@ const RegisterForm = () => {
     setError,
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  const { setAccessToken } = useAccessToken();
+  const { setAuth } = useAuth();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const result = await fetch("/api/auth/register", {
@@ -29,7 +29,11 @@ const RegisterForm = () => {
     const resultJson = await result.json();
 
     if (result.status === 201) {
-      setAccessToken(resultJson.accessToken);
+      setAuth((prev) => ({
+        ...prev,
+        userId: resultJson.insertedUserId,
+        accessToken: resultJson.accessToken,
+      }));
       navigate({
         to: "/dashboard",
       });
