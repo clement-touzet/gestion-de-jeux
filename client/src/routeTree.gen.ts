@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardGamesReviewsRouteRouteImport } from './routes/dashboard/games-reviews/route'
 import { Route as DashboardGamesReviewsIndexRouteImport } from './routes/dashboard/games-reviews/index'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
@@ -41,20 +42,27 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardGamesReviewsRouteRoute =
+  DashboardGamesReviewsRouteRouteImport.update({
+    id: '/games-reviews',
+    path: '/games-reviews',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardGamesReviewsIndexRoute =
   DashboardGamesReviewsIndexRouteImport.update({
-    id: '/games-reviews/',
-    path: '/games-reviews/',
-    getParentRoute: () => DashboardRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardGamesReviewsRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/dashboard/games-reviews': typeof DashboardGamesReviewsRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
-  '/dashboard/games-reviews': typeof DashboardGamesReviewsIndexRoute
+  '/dashboard/games-reviews/': typeof DashboardGamesReviewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/dashboard/games-reviews': typeof DashboardGamesReviewsRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -77,16 +86,18 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/dashboard/games-reviews'
     | '/dashboard/'
     | '/login'
     | '/register'
-    | '/dashboard/games-reviews'
+    | '/dashboard/games-reviews/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/dashboard' | '/login' | '/register' | '/dashboard/games-reviews'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/dashboard/games-reviews'
     | '/dashboard/'
     | '/login/'
     | '/register/'
@@ -137,24 +148,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/games-reviews/': {
-      id: '/dashboard/games-reviews/'
+    '/dashboard/games-reviews': {
+      id: '/dashboard/games-reviews'
       path: '/games-reviews'
       fullPath: '/dashboard/games-reviews'
-      preLoaderRoute: typeof DashboardGamesReviewsIndexRouteImport
+      preLoaderRoute: typeof DashboardGamesReviewsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/games-reviews/': {
+      id: '/dashboard/games-reviews/'
+      path: '/'
+      fullPath: '/dashboard/games-reviews/'
+      preLoaderRoute: typeof DashboardGamesReviewsIndexRouteImport
+      parentRoute: typeof DashboardGamesReviewsRouteRoute
     }
   }
 }
 
-interface DashboardRouteRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute
+interface DashboardGamesReviewsRouteRouteChildren {
   DashboardGamesReviewsIndexRoute: typeof DashboardGamesReviewsIndexRoute
 }
 
+const DashboardGamesReviewsRouteRouteChildren: DashboardGamesReviewsRouteRouteChildren =
+  {
+    DashboardGamesReviewsIndexRoute: DashboardGamesReviewsIndexRoute,
+  }
+
+const DashboardGamesReviewsRouteRouteWithChildren =
+  DashboardGamesReviewsRouteRoute._addFileChildren(
+    DashboardGamesReviewsRouteRouteChildren,
+  )
+
+interface DashboardRouteRouteChildren {
+  DashboardGamesReviewsRouteRoute: typeof DashboardGamesReviewsRouteRouteWithChildren
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardGamesReviewsRouteRoute: DashboardGamesReviewsRouteRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardGamesReviewsIndexRoute: DashboardGamesReviewsIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

@@ -8,9 +8,7 @@ const useRefreshToken = () => {
       credentials: "include",
     });
     const data = await response.json();
-    console.log("data from refresh", data);
     setAuth((prev) => {
-      console.log("prev data", prev);
       return {
         ...prev,
         accessToken: data.accessToken,

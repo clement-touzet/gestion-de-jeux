@@ -7,14 +7,11 @@ import ReviewCardsSection from "../../../features/game-reviews/components/Review
 import ReviewCard from "../../../features/game-reviews/components/ReviewCard";
 import { useQuery } from "@tanstack/react-query";
 import getUserGamesReviews from "../../../features/game-reviews/queries/getUserGamesReviews";
-import requireAuth from "../../../features/auth/utils/requireAuth";
+
 import useAxiosPrivate from "../../../features/auth/hooks/useAxiosPrivate";
 
 export const Route = createFileRoute("/dashboard/games-reviews/")({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    requireAuth(context.authentication.auth.userId, location);
-  },
 });
 
 function RouteComponent() {

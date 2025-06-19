@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-type AuthType = {
+export type AuthType = {
   accessToken: string;
   userId: string;
 };
@@ -12,7 +12,10 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
-  const [auth, setAuth] = useState({ accessToken: "", userId: "" });
+  const [auth, setAuth] = useState({
+    accessToken: "",
+    userId: "",
+  });
 
   return <AuthContext value={{ auth, setAuth }}>{children}</AuthContext>;
 };

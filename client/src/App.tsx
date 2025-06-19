@@ -1,4 +1,3 @@
-import React from "react";
 import { AuthProvider } from "./features/auth/providers/AuthProvider";
 import Providers from "./Providers";
 import useAuth from "./features/auth/hooks/useAuth";

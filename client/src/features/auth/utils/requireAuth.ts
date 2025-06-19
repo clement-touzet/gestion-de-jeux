@@ -1,8 +1,12 @@
 import { ParsedLocation, redirect } from "@tanstack/react-router";
+import { AuthType } from "../providers/AuthProvider";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-const requireAuth = (userId: string, location: ParsedLocation<{}>) => {
-  if (!userId) {
+const requireAuth = (
+  accessToken: AuthType["accessToken"],
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  location: ParsedLocation<{}>
+) => {
+  if (!accessToken) {
     throw redirect({
       to: "/login",
       search: {
