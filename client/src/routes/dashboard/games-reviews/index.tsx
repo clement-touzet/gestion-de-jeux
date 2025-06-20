@@ -8,6 +8,7 @@ import getUserGamesReviews from "../../../features/game-reviews/queries/getUserG
 
 import useAxiosPrivate from "../../../features/auth/hooks/useAxiosPrivate";
 import AddNewGameReview from "../../../features/game-reviews/components/AddNewGameReview";
+import { GAMES_REVIEWS_QUERY_KEY } from "../../../constants/queryKeys";
 
 export const Route = createFileRoute("/dashboard/games-reviews/")({
   component: RouteComponent,
@@ -16,11 +17,15 @@ export const Route = createFileRoute("/dashboard/games-reviews/")({
 function RouteComponent() {
   const axiosPrivate = useAxiosPrivate();
 
-  const { data: gamesReviews } = useQuery({
-    queryKey: ["user-games-reviews"],
+  const {
+    data: gamesReviews,
+    error,
+    isError,
+  } = useQuery({
+    queryKey: [GAMES_REVIEWS_QUERY_KEY],
     queryFn: () => getUserGamesReviews(axiosPrivate),
   });
-  console.log("data in component", gamesReviews);
+
   return (
     <div>
       <h1 className="font-bold text-2xl">Mes jeux</h1>
@@ -56,10 +61,19 @@ function RouteComponent() {
         {/* add new button */}
         <AddNewGameReview />
 
-        <ReviewCardsSection>
-          {/* {gamesReviews.map((review) => {
-            return <ReviewCard />;
-          })} */}
+        <ReviewCardsSection error={error} isError={isError}>
+          {gamesReviews
+            ? gamesReviews.map(({ timePlayed, stars, game: { name, id } }) => {
+                return (
+                  <ReviewCard
+                    key={id}
+                    timePlayed={timePlayed}
+                    stars={stars}
+                    gameName={name}
+                  />
+                );
+              })
+            : null}
         </ReviewCardsSection>
       </Section>
     </div>

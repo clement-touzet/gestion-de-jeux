@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { gamesReviewsWithGameSchema } from "../../../../../server/db/schemas/game/gameReview";
 
 const GAMES_REVIEWS_API_URL = "/api/games-reviews";
 
@@ -7,10 +8,16 @@ const getUserGamesReviews = async (axiosPrivate: AxiosInstance) => {
     method: "GET",
   });
   const data = await response.data;
-  console.log("result fetch", response);
-  console.log("data fetch", response.data);
 
-  return data;
+  const { data: parsedGamesReview, success } =
+    gamesReviewsWithGameSchema.safeParse(data);
+
+  if (!success)
+    throw new Error(
+      "Une erreur est survenue lors de la récupération des données"
+    );
+
+  return parsedGamesReview;
 };
 
 export default getUserGamesReviews;

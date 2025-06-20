@@ -68,10 +68,14 @@ const AddNewGameReview = () => {
     setIsModalNewGameOpen(true);
   };
 
-  const handleClickCancelReview = () => {
+  const handleClickCancelReview = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
     reset();
     clearErrors();
     closeReviewModal();
+    mutation.reset();
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -96,9 +100,12 @@ const AddNewGameReview = () => {
         </h1>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <fieldset className="fieldset">
-            <label className="label">Jeu</label>
+            <label className="label" htmlFor="gameId">
+              Jeu
+            </label>
             <div>
               <select
+                id="gameId"
                 defaultValue={""}
                 className={classNames("input", {
                   "input-error": errors.gameId,
@@ -144,8 +151,10 @@ const AddNewGameReview = () => {
                 className={classNames("input", {
                   "input-error": errors.timePlayed,
                 })}
+                htmlFor="timePlayed"
               >
                 <input
+                  id="timePlayed"
                   type="number"
                   placeholder="Temps de jeu"
                   min={0}
@@ -168,44 +177,56 @@ const AddNewGameReview = () => {
                 </p>
               )}
             </div>
-            <label className="label">Note</label>
-            <div className="rating mb-4">
-              <input
-                {...register("stars", { valueAsNumber: true })}
-                type="radio"
-                value={1}
-                className="mask mask-star-2 bg-orange-400"
-                aria-label="1 star"
-              />
-              <input
-                {...register("stars", { valueAsNumber: true })}
-                type="radio"
-                value={2}
-                className="mask mask-star-2 bg-orange-400"
-                aria-label="2 star"
-              />
-              <input
-                {...register("stars", { valueAsNumber: true })}
-                type="radio"
-                value={3}
-                className="mask mask-star-2 bg-orange-400"
-                aria-label="3 star"
-              />
-              <input
-                {...register("stars", { valueAsNumber: true })}
-                type="radio"
-                value={4}
-                className="mask mask-star-2 bg-orange-400"
-                aria-label="4 star"
-                defaultChecked
-              />
-              <input
-                {...register("stars", { valueAsNumber: true })}
-                type="radio"
-                value={5}
-                className="mask mask-star-2 bg-orange-400"
-                aria-label="5 star"
-              />
+            <label className="label" htmlFor="rating">
+              Note
+            </label>
+            <div>
+              <div className="rating mb-4" id="rating">
+                <input
+                  {...register("stars", {
+                    valueAsNumber: true,
+                    required: true,
+                  })}
+                  type="radio"
+                  value={1}
+                  className="mask mask-star-2 bg-orange-400"
+                  aria-label="1 star"
+                />
+                <input
+                  {...register("stars", { valueAsNumber: true })}
+                  type="radio"
+                  value={2}
+                  className="mask mask-star-2 bg-orange-400"
+                  aria-label="2 star"
+                />
+                <input
+                  {...register("stars", { valueAsNumber: true })}
+                  type="radio"
+                  value={3}
+                  className="mask mask-star-2 bg-orange-400"
+                  aria-label="3 star"
+                />
+                <input
+                  {...register("stars", { valueAsNumber: true })}
+                  type="radio"
+                  value={4}
+                  className="mask mask-star-2 bg-orange-400"
+                  aria-label="4 star"
+                  defaultChecked
+                />
+                <input
+                  {...register("stars", { valueAsNumber: true })}
+                  type="radio"
+                  value={5}
+                  className="mask mask-star-2 bg-orange-400"
+                  aria-label="5 star"
+                />
+              </div>
+              {errors.stars?.type === "required" && (
+                <p role="alert" className="text-error">
+                  Vous devez choisir une note
+                </p>
+              )}
             </div>
           </fieldset>
 
@@ -218,6 +239,9 @@ const AddNewGameReview = () => {
             </button>
           </div>
         </form>
+        {mutation.isError ? (
+          <p className="text-error">{mutation.error.message}</p>
+        ) : null}
       </Modal>
 
       <AddNewGameModal

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../../ui/components/Modal";
-import addGame from "../queries/AddGame";
 import { SubmitHandler, useForm } from "react-hook-form";
 import classNames from "classnames";
 import { GAMES_QUERY_KEY } from "../../../constants/queryKeys";
+import addGame from "../queries/addGame";
 
 type Inputs = {
   name: string;
@@ -39,6 +39,7 @@ const AddNewGameModal = ({ visible, onClose }: Props) => {
   ) => {
     event.preventDefault();
     onClose();
+    mutation.reset();
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

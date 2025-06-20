@@ -7,7 +7,7 @@ import {
   gameReviewInsertSchema,
   gameReviewTable,
 } from "../db/schemas/game/gameReview";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 router
   .route("/")
@@ -28,8 +28,12 @@ router
     }
     const gamesReviews = await db.query.gameReviewTable.findMany({
       where: eq(gameReviewTable.userId, decodedUserId),
+      with: {
+        game: true,
+      },
     });
-    res.json([]);
+    console.log(gamesReviews);
+    res.json(gamesReviews);
   })
   .post(async (req, res) => {
     let accessToken = "";
@@ -42,6 +46,10 @@ router
       return;
     }
     const decodedUserId = getUserIdFromAccessToken(accessToken);
+    if (!decodedUserId) {
+      res.sendStatus(500);
+      return;
+    }
 
     const gameReview = { ...req.body, userId: decodedUserId };
     console.log("gameReview", gameReview);
@@ -54,6 +62,20 @@ router
     if (!success) {
       console.log(error);
       res.status(400).json({ message: "Requête mal formatée" });
+      return;
+    }
+
+    const duplicate = await db.query.gameReviewTable.findFirst({
+      where: and(
+        eq(gameReviewTable.userId, decodedUserId),
+        eq(gameReviewTable.gameId, parsedGameReview.gameId)
+      ),
+    });
+    // if a game review already exists for this game for this user, return 409 duplicate
+    if (duplicate) {
+      res
+        .status(409)
+        .json({ message: "Vous avez déjà écrit un avis pour ce jeu" });
       return;
     }
 
