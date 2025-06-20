@@ -6,10 +6,11 @@ const getUserGamesReviews = async (axiosPrivate: AxiosInstance) => {
   const response = await axiosPrivate.get(GAMES_REVIEWS_API_URL, {
     method: "GET",
   });
+  const data = await response.data;
   console.log("result fetch", response);
   console.log("data fetch", response.data);
 
-  return response.data;
+  return data;
 };
 
 export default getUserGamesReviews;

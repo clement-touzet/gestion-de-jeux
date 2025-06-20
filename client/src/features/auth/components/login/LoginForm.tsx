@@ -42,7 +42,9 @@ const LoginForm = () => {
       console.log("error");
       setError("root.error", {
         type: result.status.toString(),
-        message: resultJson.message || "An error occurred, please try later",
+        message:
+          resultJson.message ||
+          "Une erreur est survenue, veuillez réessayer plus tard",
       });
     }
   };
@@ -84,9 +86,7 @@ const LoginForm = () => {
           Se connecter
         </button>
         {errors.root?.error && (
-          <span className="text-error">
-            Une erreur est survenue : {errors.root.error.message}
-          </span>
+          <span className="text-error">{errors.root.error.message}</span>
         )}
       </fieldset>
     </form>

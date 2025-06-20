@@ -9,7 +9,6 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     res.sendStatus(401);
     return;
   }
-  console.log("authHeader", authHeader);
   const token = authHeader.split(" ")[1]; //because authHeader should be "Bearer [token]"
 
   if (!token) {

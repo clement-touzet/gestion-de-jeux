@@ -1,11 +1,20 @@
+import classNames, { Argument } from "classnames";
 import { useEffect, useRef } from "react";
 
 type Props = {
   visible: boolean;
   onClose?: () => void;
+  className?: Argument;
+  modalBoxClassName?: Argument;
 } & React.PropsWithChildren;
 
-const Modal = ({ visible, onClose, children }: Props) => {
+const Modal = ({
+  visible,
+  onClose,
+  className,
+  modalBoxClassName,
+  children,
+}: Props) => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -29,6 +38,7 @@ const Modal = ({ visible, onClose, children }: Props) => {
 
   const handleESC = (event: React.ChangeEvent<HTMLDialogElement>) => {
     event?.preventDefault();
+    event.stopPropagation();
     handleClose();
   };
 
@@ -42,10 +52,12 @@ const Modal = ({ visible, onClose, children }: Props) => {
       <dialog
         ref={modalRef}
         id="my_modal_1"
-        className="modal"
+        className={classNames("modal", className)}
         onCancel={handleESC}
       >
-        <div className="modal-box">{children}</div>
+        <div className={classNames("modal-box", modalBoxClassName)}>
+          {children}
+        </div>
         {/* close the modal when clicked outside */}
         <form
           method="dialog"

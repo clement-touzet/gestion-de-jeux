@@ -4,7 +4,7 @@ import { UserType } from "../db/schemas";
 
 const getRefreshJWT = (userId: UserType["id"]) => {
   return jwt.sign({ userId }, env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "10s", // expires 30d
+    expiresIn: "30d", // expires 30d
   });
 };
 

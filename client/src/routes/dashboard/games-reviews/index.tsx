@@ -1,26 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Section from "../../../features/ui/components/Section";
-import { RiAddLine, RiFilter3Line } from "react-icons/ri";
-import { useState } from "react";
-import Modal from "../../../features/ui/components/Modal";
+import { RiFilter3Line } from "react-icons/ri";
 import ReviewCardsSection from "../../../features/game-reviews/components/ReviewCardsSection";
 import ReviewCard from "../../../features/game-reviews/components/ReviewCard";
 import { useQuery } from "@tanstack/react-query";
 import getUserGamesReviews from "../../../features/game-reviews/queries/getUserGamesReviews";
 
 import useAxiosPrivate from "../../../features/auth/hooks/useAxiosPrivate";
+import AddNewGameReview from "../../../features/game-reviews/components/AddNewGameReview";
 
 export const Route = createFileRoute("/dashboard/games-reviews/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [isModalNewReviewOpen, setIsModalNewReviewOpen] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
-  const handleCloseModal = () => {
-    setIsModalNewReviewOpen(false);
-  };
   const { data: gamesReviews } = useQuery({
     queryKey: ["user-games-reviews"],
     queryFn: () => getUserGamesReviews(axiosPrivate),
@@ -59,18 +54,7 @@ function RouteComponent() {
           </ul>
         </details>
         {/* add new button */}
-        <button className="btn btn-primary">
-          <RiAddLine />
-          Nouveau
-        </button>
-        <Modal visible={isModalNewReviewOpen} onClose={handleCloseModal}>
-          <h1 className="text-bold font-xl">A quel jeu avez vous joué ?</h1>
-          <form>
-            <label className="text-bold font-lg">Jeu</label>
-            {/* afficher la liste des jeux */}
-            <input></input>
-          </form>
-        </Modal>
+        <AddNewGameReview />
 
         <ReviewCardsSection>
           {/* {gamesReviews.map((review) => {
