@@ -63,6 +63,7 @@ function RouteComponent() {
                     timePlayed={timePlayed}
                     stars={stars}
                     gameName={name}
+                    gameId={id}
                   />
                 );
               })

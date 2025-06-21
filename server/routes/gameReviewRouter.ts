@@ -6,6 +6,7 @@ import db from "../db/db";
 import {
   gameReviewInsertSchema,
   gameReviewTable,
+  gameReviewUpdateSchema,
 } from "../db/schemas/game/gameReview";
 import { and, eq } from "drizzle-orm";
 
@@ -91,11 +92,79 @@ router
 
 router
   .route("/:id")
-  .put((req, res) => {
-    res.send("modifier une review");
+  .put(async (req, res) => {
+    let accessToken = "";
+    try {
+      accessToken = getAccessTokenFromRequest(req);
+    } catch (error) {
+      res.status(401).json({
+        message: "Vous devez être connecté pour modifier un avis",
+      });
+      return;
+    }
+    const decodedUserId = getUserIdFromAccessToken(accessToken);
+    if (!decodedUserId) {
+      res.sendStatus(500);
+      return;
+    }
+    const gameId = req.params.id;
+
+    const fieldsToUpdate = req.body;
+    const { data: formatedFieldsToUpdate, success } =
+      gameReviewUpdateSchema.safeParse(fieldsToUpdate);
+    if (!success) {
+      res.sendStatus(400);
+      return;
+    }
+
+    try {
+      const updated = await db
+        .update(gameReviewTable)
+        .set(formatedFieldsToUpdate)
+        .where(
+          and(
+            eq(gameReviewTable.userId, decodedUserId),
+            eq(gameReviewTable.gameId, gameId)
+          )
+        )
+        .returning();
+      const updatedGameReview = updated[0];
+      res.sendStatus(200).json({ updatedGameReview });
+    } catch (error) {
+      res.sendStatus(500);
+    }
   })
-  .delete((req, res) => {
-    res.send("supprimer une review");
+  .delete(async (req, res) => {
+    let accessToken = "";
+    try {
+      accessToken = getAccessTokenFromRequest(req);
+    } catch (error) {
+      res.status(401).json({
+        message: "Vous devez être connecté pour supprimer un avis",
+      });
+      return;
+    }
+    const decodedUserId = getUserIdFromAccessToken(accessToken);
+    if (!decodedUserId) {
+      res.sendStatus(500);
+      return;
+    }
+    const gameId = req.params.id;
+
+    try {
+      const deleted = await db
+        .delete(gameReviewTable)
+        .where(
+          and(
+            eq(gameReviewTable.userId, decodedUserId),
+            eq(gameReviewTable.gameId, gameId)
+          )
+        )
+        .returning();
+      res.sendStatus(204);
+    } catch (error) {
+      res.sendStatus(500);
+    }
   });
 
 export default router;

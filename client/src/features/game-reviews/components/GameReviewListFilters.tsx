@@ -61,12 +61,12 @@ const GameReviewListFilters = ({ onChange }: Props) => {
     closeDrawer();
   };
 
+  const filters = {
+    stars: isFilterByStarsActive ? rating : undefined,
+    dateRange: isFilterByDateActive ? dateRange : undefined,
+    timePlayed: isFilterByTimePlayedActive ? timePlayed : undefined,
+  };
   const handleSaveFilters = () => {
-    const filters = {
-      stars: isFilterByStarsActive ? rating : undefined,
-      dateRange: isFilterByDateActive ? dateRange : undefined,
-      timePlayed: isFilterByTimePlayedActive ? timePlayed : undefined,
-    };
     onChange(filters);
   };
 

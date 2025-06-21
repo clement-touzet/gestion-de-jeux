@@ -10,7 +10,6 @@ import {
 import { gameTable } from "./game";
 import { usersTable } from "../users";
 import { createSchemaFactory } from "drizzle-zod";
-import z from "zod/v4";
 import { GAME_RELATION_NAME } from "../../relationsNames";
 
 export const gameReviewTable = pgTable(
@@ -50,11 +49,13 @@ export const gameReviewTableRelations = relations(
 export type GameReviewType = typeof gameReviewTable.$inferSelect;
 export type InsertGameReviewType = typeof gameReviewTable.$inferInsert;
 
-const { createSelectSchema, createInsertSchema } = createSchemaFactory({
-  coerce: {
-    date: true,
-  },
-});
+const { createSelectSchema, createInsertSchema, createUpdateSchema } =
+  createSchemaFactory({
+    coerce: {
+      date: true,
+    },
+  });
 
 export const gameReviewSelectSchema = createSelectSchema(gameReviewTable);
 export const gameReviewInsertSchema = createInsertSchema(gameReviewTable);
+export const gameReviewUpdateSchema = createUpdateSchema(gameReviewTable);

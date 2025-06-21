@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RiAddLine } from "react-icons/ri";
 import Modal from "../../ui/components/Modal";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import getGames from "../../games/queries/getGames";
 import { GameType } from "../../../../../server/db/schemas/game/game";
 import AddNewGameModal from "../../games/components/AddNewGameModal";
@@ -25,6 +25,7 @@ const AddNewGameReview = () => {
   const [isModalNewReviewOpen, setIsModalNewReviewOpen] = useState(false);
   const [isModalNewGameOpen, setIsModalNewGameOpen] = useState(false);
 
+  const queryClient = useQueryClient();
   const {
     formState: { errors },
     register,
@@ -45,6 +46,8 @@ const AddNewGameReview = () => {
     onSuccess: () => {
       reset();
       closeReviewModal();
+      // invalidates all queries that got in there queryKey GAMES_REVIEW_QUERY_KEY
+      queryClient.invalidateQueries({ queryKey: [GAMES_REVIEWS_QUERY_KEY] });
     },
   });
 

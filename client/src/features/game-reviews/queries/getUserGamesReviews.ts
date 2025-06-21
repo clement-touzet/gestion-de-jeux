@@ -40,6 +40,7 @@ const getUserGamesReviews = async (
         .includes(searchFilter.toLowerCase());
     });
   }
+
   if (starsFilter) {
     filteredGamesReview = filteredGamesReview.filter((gameReview) => {
       return gameReview.stars === starsFilter;
