@@ -85,7 +85,7 @@ const AddNewGameReview = () => {
   };
 
   return (
-    <>
+    <div>
       <button className="btn btn-primary" onClick={handleClick}>
         <RiAddLine />
         Nouveau
@@ -248,7 +248,7 @@ const AddNewGameReview = () => {
         visible={isModalNewGameOpen}
         onClose={handleCloseGameModal}
       />
-    </>
+    </div>
   );
 };
 

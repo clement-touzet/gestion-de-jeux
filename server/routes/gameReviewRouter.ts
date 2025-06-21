@@ -32,7 +32,6 @@ router
         game: true,
       },
     });
-    console.log(gamesReviews);
     res.json(gamesReviews);
   })
   .post(async (req, res) => {

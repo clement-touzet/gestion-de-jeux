@@ -1,9 +1,17 @@
 import { relations, sql } from "drizzle-orm";
-import { check, integer, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
-import { gameSelectSchema, gameTable, GameType } from "./game";
+import {
+  check,
+  integer,
+  pgTable,
+  primaryKey,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
+import { gameTable } from "./game";
 import { usersTable } from "../users";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createSchemaFactory } from "drizzle-zod";
 import z from "zod/v4";
+import { GAME_RELATION_NAME } from "../../relationsNames";
 
 export const gameReviewTable = pgTable(
   "game_review",
@@ -16,6 +24,7 @@ export const gameReviewTable = pgTable(
       .references(() => usersTable.id),
     timePlayed: integer("time_played").notNull(),
     stars: integer("stars").notNull(),
+    createdAt: timestamp().defaultNow(),
   },
   (table) => [
     check("time_played_check", sql`${table.timePlayed} >= 0`),
@@ -23,8 +32,6 @@ export const gameReviewTable = pgTable(
     primaryKey({ columns: [table.gameId, table.userId] }),
   ]
 );
-
-const GAME_RELATION_NAME = "game";
 
 export const gameReviewTableRelations = relations(
   gameReviewTable,
@@ -43,12 +50,11 @@ export const gameReviewTableRelations = relations(
 export type GameReviewType = typeof gameReviewTable.$inferSelect;
 export type InsertGameReviewType = typeof gameReviewTable.$inferInsert;
 
+const { createSelectSchema, createInsertSchema } = createSchemaFactory({
+  coerce: {
+    date: true,
+  },
+});
+
 export const gameReviewSelectSchema = createSelectSchema(gameReviewTable);
 export const gameReviewInsertSchema = createInsertSchema(gameReviewTable);
-
-export const gameReviewWithGameSchema = gameReviewSelectSchema.extend({
-  [GAME_RELATION_NAME]: gameSelectSchema,
-});
-export const gamesReviewsWithGameSchema = z.array(gameReviewWithGameSchema);
-
-export type GameReviewWithGameType = z.infer<typeof gameReviewWithGameSchema>;

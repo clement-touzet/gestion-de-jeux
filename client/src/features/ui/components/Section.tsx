@@ -6,7 +6,12 @@ type Props = {
 
 const Section = ({ classname, children }: Props) => {
   return (
-    <div className={classNames("px-4 md:px-12 py-8 md:py-12", classname)}>
+    <div
+      className={classNames(
+        "px-4 md:px-12 py-8 md:py-12 max-w-7xl mx-auto",
+        classname
+      )}
+    >
       {children}
     </div>
   );
