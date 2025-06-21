@@ -27,13 +27,43 @@ const getUserGamesReviews = async (
   }
 
   let filteredGamesReview = parsedGamesReview;
+  console.log("filters", filters);
   const searchFilter = filters.search;
+  const rangeDateFilter = filters.dateRange;
+  const starsFilter = filters.stars;
+  const timePlayedFilter = filters.timePlayed;
 
   if (searchFilter) {
     filteredGamesReview = filteredGamesReview.filter((gameReview) => {
       return gameReview.game.name
         .toLowerCase()
         .includes(searchFilter.toLowerCase());
+    });
+  }
+  if (starsFilter) {
+    filteredGamesReview = filteredGamesReview.filter((gameReview) => {
+      return gameReview.stars === starsFilter;
+    });
+  }
+
+  if (rangeDateFilter) {
+    filteredGamesReview = filteredGamesReview.filter((gameReview) => {
+      if (rangeDateFilter.from && rangeDateFilter.to)
+        return (
+          gameReview.createdAt >= rangeDateFilter.from &&
+          gameReview.createdAt <= rangeDateFilter.to
+        );
+      return false;
+    });
+  }
+
+  if (timePlayedFilter) {
+    filteredGamesReview = filteredGamesReview.filter((gameReview) => {
+      // return true if timeplayed is in the range of the filter
+      return (
+        gameReview.timePlayed >= timePlayedFilter.min &&
+        gameReview.timePlayed <= timePlayedFilter.max
+      );
     });
   }
 

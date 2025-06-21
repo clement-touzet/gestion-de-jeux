@@ -1,6 +1,11 @@
+import { DateRange } from "react-day-picker";
+
 export type GameReviewFiltersType = {
   search?: string;
-  createdAt?: string;
+  dateRange?: DateRange;
   stars?: number;
-  timePlayed?: number;
+  timePlayed?: {
+    min: number;
+    max: number;
+  };
 };

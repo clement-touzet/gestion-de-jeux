@@ -24,7 +24,7 @@ export const gameReviewTable = pgTable(
       .references(() => usersTable.id),
     timePlayed: integer("time_played").notNull(),
     stars: integer("stars").notNull(),
-    createdAt: timestamp().defaultNow(),
+    createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [
     check("time_played_check", sql`${table.timePlayed} >= 0`),

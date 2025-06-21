@@ -1,17 +1,22 @@
-import { useState } from "react";
 import Rating from "../../../ui/components/Rating";
 import FilterCategory from "./FilterCategory";
+import { GameReviewFiltersType } from "../../types/GameReviewFiltersType";
 
-const RatingFilter = () => {
-  const [isFilterByStarsActive, setIsFilterByStarsActive] = useState(false);
-  const [rating, setRating] = useState<number>(0);
+type Props = {
+  rating: GameReviewFiltersType["stars"];
+  onChange: (newRating: GameReviewFiltersType["stars"]) => void;
+  isFilterByStarsActive: boolean;
+  setIsFilterByStarsActive: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
+const RatingFilter = ({
+  rating,
+  onChange,
+  isFilterByStarsActive,
+  setIsFilterByStarsActive,
+}: Props) => {
   const handleChangeRating = (newRating: string) => {
-    setRating(parseInt(newRating));
-  };
-
-  const handleResetRating = () => {
-    setRating(0);
+    onChange(parseInt(newRating));
   };
 
   const handleClickToggleFilter = () => {
@@ -30,13 +35,6 @@ const RatingFilter = () => {
           handleChangeValue={handleChangeRating}
           disabled={!isFilterByStarsActive}
         />
-        <button
-          onClick={handleResetRating}
-          className="btn"
-          disabled={rating === 0 || !isFilterByStarsActive}
-        >
-          Réinitialiser
-        </button>
       </div>
     </div>
   );

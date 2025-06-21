@@ -1,7 +1,8 @@
 import React from "react";
+import { GameReviewFiltersType } from "../../game-reviews/types/GameReviewFiltersType";
 
 type Props = {
-  value: number;
+  value: GameReviewFiltersType["stars"];
   handleChangeValue: (newRating: string) => void;
   disabled: boolean;
 };
@@ -12,16 +13,19 @@ const Rating = ({ value, handleChangeValue, disabled, ...props }: Props) => {
   };
 
   return (
-    <input
-      type="number"
-      min={1}
-      max={5}
-      value={value}
-      onChange={handleChange}
-      className="input w-16"
-      disabled={disabled}
-      {...props}
-    />
+    <div>
+      <input
+        type="number"
+        min={1}
+        max={5}
+        value={value}
+        onChange={handleChange}
+        className="input w-16"
+        disabled={disabled}
+        {...props}
+      />
+      <label className="étoiles pl-2">étoiles</label>
+    </div>
   );
 };
 

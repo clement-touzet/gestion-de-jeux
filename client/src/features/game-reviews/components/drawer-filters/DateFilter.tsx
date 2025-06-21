@@ -1,18 +1,28 @@
-import { useState } from "react";
 import FilterCategory from "./FilterCategory";
-import { DateRange, DayPicker, getDefaultClassNames } from "react-day-picker";
+import { DayPicker, getDefaultClassNames } from "react-day-picker";
 import "react-day-picker/style.css";
+import { GameReviewFiltersType } from "../../types/GameReviewFiltersType";
 
-const DateFilter = () => {
-  const [isFilterByDateActive, setIsFilterByDateActive] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+type Props = {
+  dateRange: GameReviewFiltersType["dateRange"];
+  onChange: (newDateRange: GameReviewFiltersType["dateRange"]) => void;
+  isFilterByDateActive: boolean;
+  setIsFilterByDateActive: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const DateFilter = ({
+  dateRange,
+  onChange,
+  isFilterByDateActive,
+  setIsFilterByDateActive,
+}: Props) => {
   const defaultClassNames = getDefaultClassNames();
   const handleClickToggleFilter = () => {
     setIsFilterByDateActive((prev) => !prev);
   };
 
   const handleResetDateRange = () => {
-    setDateRange(undefined);
+    onChange(undefined);
   };
 
   return (
@@ -53,7 +63,7 @@ const DateFilter = () => {
             className="bg-base-100 p-2 rounded te"
             mode="range"
             selected={dateRange}
-            onSelect={setDateRange}
+            onSelect={onChange}
             classNames={{
               selected: `${defaultClassNames.selected} bg-primary-content!`,
               range_start: `${defaultClassNames.range_start} rounded-l-full`,

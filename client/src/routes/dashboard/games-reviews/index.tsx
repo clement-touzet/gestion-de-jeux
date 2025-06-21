@@ -18,7 +18,7 @@ export const Route = createFileRoute("/dashboard/games-reviews/")({
 });
 
 function RouteComponent() {
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<GameReviewFiltersType["search"]>("");
   const [filters, setFilters] =
     useState<Omit<GameReviewFiltersType, "search">>();
 
@@ -29,13 +29,13 @@ function RouteComponent() {
     error,
     isError,
   } = useQuery({
-    queryKey: [GAMES_REVIEWS_QUERY_KEY, { search }],
-    queryFn: () => getUserGamesReviews(axiosPrivate, { search }),
+    queryKey: [GAMES_REVIEWS_QUERY_KEY, { search, ...filters }],
+    queryFn: () => getUserGamesReviews(axiosPrivate, { search, ...filters }),
   });
 
-  const handleChangeFilters = (
-    filters: Omit<GameReviewFiltersType, "search">
-  ) => {};
+  const handleChangeFilters = (filters: GameReviewFiltersType) => {
+    setFilters(filters);
+  };
 
   const handleChangeSearch = (search: string) => {
     setSearch(search);
