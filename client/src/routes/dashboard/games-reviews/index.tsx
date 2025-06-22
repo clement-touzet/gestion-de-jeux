@@ -56,17 +56,19 @@ function RouteComponent() {
 
         <ReviewCardsSection error={error} isError={isError}>
           {gamesReviews
-            ? gamesReviews.map(({ timePlayed, stars, game: { name, id } }) => {
-                return (
-                  <ReviewCard
-                    key={id}
-                    timePlayed={timePlayed}
-                    stars={stars}
-                    gameName={name}
-                    gameId={id}
-                  />
-                );
-              })
+            ? gamesReviews
+                .sort((a, b) => a.game.name.localeCompare(b.game.name)) // sort alphabeticaly
+                .map(({ timePlayed, stars, game: { name, id } }) => {
+                  return (
+                    <ReviewCard
+                      key={id}
+                      timePlayed={timePlayed}
+                      stars={stars}
+                      gameName={name}
+                      gameId={id}
+                    />
+                  );
+                })
             : null}
         </ReviewCardsSection>
       </Section>

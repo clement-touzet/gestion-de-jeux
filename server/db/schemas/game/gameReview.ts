@@ -11,6 +11,7 @@ import { gameTable } from "./game";
 import { usersTable } from "../users";
 import { createSchemaFactory } from "drizzle-zod";
 import { GAME_RELATION_NAME } from "../../relationsNames";
+import z from "zod/v4";
 
 export const gameReviewTable = pgTable(
   "game_review",
@@ -59,3 +60,5 @@ const { createSelectSchema, createInsertSchema, createUpdateSchema } =
 export const gameReviewSelectSchema = createSelectSchema(gameReviewTable);
 export const gameReviewInsertSchema = createInsertSchema(gameReviewTable);
 export const gameReviewUpdateSchema = createUpdateSchema(gameReviewTable);
+
+export type GameReviewUpdateType = z.infer<typeof gameReviewUpdateSchema>;

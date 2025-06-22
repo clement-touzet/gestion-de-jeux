@@ -1,13 +1,13 @@
 import { RiDeleteBin7Line, RiMore2Fill, RiPencilLine } from "react-icons/ri";
 import { GameType } from "../../../../../server/db/schemas/game/game";
 import { GameReviewType } from "../../../../../server/db/schemas/game/gameReview";
-import { Link } from "@tanstack/react-router";
 import Modal from "../../ui/components/Modal";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GAMES_REVIEWS_QUERY_KEY } from "../../../constants/queryKeys";
 import deleteGameReview from "../queries/deleteGameReview";
 import useAxiosPrivate from "../../auth/hooks/useAxiosPrivate";
+import UpdateGameReviewModal from "./updateGameReviewModal";
 
 type Props = {
   timePlayed: GameReviewType["timePlayed"];
@@ -24,6 +24,7 @@ const ReviewCard = ({
 }: Props) => {
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
     useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
   const queryClient = useQueryClient();
@@ -38,7 +39,7 @@ const ReviewCard = ({
     onError: () => {},
   });
 
-  const showModalConfirmDelete = () => {
+  const onOpenConfirmDeleteModal = () => {
     setIsConfirmDeleteModalOpen(true);
   };
 
@@ -48,6 +49,10 @@ const ReviewCard = ({
 
   const onDeleteGameReview = () => {
     mutation.mutate();
+  };
+
+  const onOpenUpdateModal = () => {
+    setIsUpdateModalOpen(true);
   };
 
   return (
@@ -90,14 +95,17 @@ const ReviewCard = ({
             tabIndex={0}
             className="dropdown-content border-1 border-base-300 shadow-lg menu bg-base-100 rounded-box z-1 w-52 p-2 gap-1"
           >
-            <Link to="" className="btn btn-sm btn-ghost justify-start">
+            <button
+              onClick={onOpenUpdateModal}
+              className="btn btn-sm btn-ghost justify-start"
+            >
               <RiPencilLine />
               Modifier
-            </Link>
+            </button>
 
             <button
               className="btn btn-soft btn-sm btn-error justify-start"
-              onClick={showModalConfirmDelete}
+              onClick={onOpenConfirmDeleteModal}
             >
               <RiDeleteBin7Line />
               Supprimer
@@ -122,6 +130,15 @@ const ReviewCard = ({
         </div>
         {mutation.error ? <p>{mutation.error.message}</p> : null}
       </Modal>
+      <UpdateGameReviewModal
+        visible={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        defaultValues={{
+          timePlayed,
+          stars: starsNumber,
+        }}
+        gameId={gameId}
+      />
     </div>
   );
 };

@@ -1,18 +1,22 @@
 import { AxiosError, AxiosInstance } from "axios";
-import { GameReviewType } from "../../../../../server/db/schemas/game/gameReview";
-import { DELETE_GAME_REVIEW_URL } from "../../../constants/apiUrls";
+import {
+  GameReviewUpdateType,
+  GameType,
+} from "../../../../../server/db/schemas";
+import { PUT_GAMES_REVIEWS_URL } from "../../../constants/apiUrls";
 
-const deleteGameReview = async (
-  gameId: GameReviewType["gameId"],
+const updateGameReview = async (
+  gameId: GameType["id"],
+  data: GameReviewUpdateType,
   axiosPrivate: AxiosInstance
 ) => {
   try {
-    const result = await axiosPrivate(DELETE_GAME_REVIEW_URL(gameId), {
-      method: "DELETE",
+    const result = await axiosPrivate(PUT_GAMES_REVIEWS_URL(gameId), {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ gameId }),
+      data: JSON.stringify(data),
     });
-    if (result.status !== 204) {
+    if (result.status !== 200) {
       const errorMessage = result.data.message;
       throw new Error(
         errorMessage || "Une erreur est survenue, veillez réessayer plus tard"
@@ -29,5 +33,4 @@ const deleteGameReview = async (
     }
   }
 };
-
-export default deleteGameReview;
+export default updateGameReview;

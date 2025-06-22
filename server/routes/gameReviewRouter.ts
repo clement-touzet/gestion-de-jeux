@@ -110,9 +110,14 @@ router
     const gameId = req.params.id;
 
     const fieldsToUpdate = req.body;
-    const { data: formatedFieldsToUpdate, success } =
-      gameReviewUpdateSchema.safeParse(fieldsToUpdate);
+    console.log("fields to update", fieldsToUpdate);
+    const {
+      data: formatedFieldsToUpdate,
+      success,
+      error,
+    } = gameReviewUpdateSchema.safeParse(fieldsToUpdate);
     if (!success) {
+      console.log("error", error);
       res.sendStatus(400);
       return;
     }
