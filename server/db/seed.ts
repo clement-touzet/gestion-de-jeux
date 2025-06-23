@@ -1,6 +1,7 @@
 import db from "./db";
 import * as schemas from "./schemas";
 import { reset } from "drizzle-seed";
+import bcrypt from "bcrypt";
 
 async function main() {
   console.log("seeding started !");
@@ -23,7 +24,15 @@ async function main() {
       imageUrl: "",
     },
   ]);
+
+  await db.insert(schemas.usersTable).values({
+    email: "user@example.com",
+    hashedPassword: await bcrypt.hash("user", 10),
+    pseudonym: "Utilisateur d'exemple",
+  });
+
   console.log("\nseeding finished !");
+  process.exit(0);
 }
 
 main();

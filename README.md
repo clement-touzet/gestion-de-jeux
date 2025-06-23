@@ -14,6 +14,14 @@ docker compose up
 npm run db:seed
 npm run dev
 ```
+
+---
+identification pour se connecter à l'appli :
+email : user@example.com
+mot de passe : user
+---
+
+
 # Base de données et Drizzle
 ## interface admin de la base de données : 
 ```

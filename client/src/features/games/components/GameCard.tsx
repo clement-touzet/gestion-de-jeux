@@ -12,9 +12,11 @@ const GameCard = ({ gameName, totalTimePlayed, trendingPosition }: Props) => {
       <p className="text-7xl italic font-extrabold">#{trendingPosition}</p>
       <div className="">
         <h3 className="text-xl font-semibold">{gameName}</h3>
-        <p className="text-sm text-neutral-500">
-          Heures jouées cumulées : {totalTimePlayed ?? 0}
-        </p>
+        {totalTimePlayed ? (
+          <p className="text-sm text-neutral-500">
+            Heures jouées cumulées : {totalTimePlayed ?? 0}
+          </p>
+        ) : null}
       </div>
     </div>
   );
