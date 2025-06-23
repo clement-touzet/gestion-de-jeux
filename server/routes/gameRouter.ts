@@ -53,7 +53,6 @@ router.get("/popular", async (req, res) => {
       ORDER BY total_time_played DESC
     `);
 
-  console.log("games", games);
   res.json(games);
 });
 
@@ -72,7 +71,6 @@ router.get("/recently-added", async (req, res) => {
         ${gameTable.createdAt} DESC
     `);
 
-  console.log("games", games);
   res.json(games);
 });
 

@@ -73,7 +73,7 @@ function RouteComponent() {
         <ul className="flex items-center gap-4">
           {games
             ? games.map((game) => (
-                <li className="bg-base-300 p-4 rounded shadow-sm">
+                <li className="bg-base-300 p-4 rounded shadow-sm" key={game.id}>
                   {game.name}
                 </li>
               ))
