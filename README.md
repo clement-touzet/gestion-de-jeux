@@ -5,12 +5,12 @@ https://miro.com/app/board/uXjVIof90g8=/?share_link_id=200302325297
 https://drive.google.com/file/d/19sf1EQsVrzR73O4Lgcv9n4f_YNUbnNbP/view?usp=sharing
 
 ---
-# Installation du projet
-
+# Installation et lancement du projet
+(à exécuter à la racine de ce projet)
 ```
 npm i
 npm run install-client-packages
-docker compose up
+docker compose up -d
 npm run db:seed
 npm run dev
 ```
