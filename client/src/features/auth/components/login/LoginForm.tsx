@@ -72,11 +72,7 @@ const LoginForm = () => {
         {errors.password && (
           <span className="text-error">Ce champ est requit</span>
         )}
-        <div>
-          <Link to="/" className="link link-hover">
-            Mot de passe oublié?
-          </Link>
-        </div>
+
         <button
           type="submit"
           className={classNames("btn btn-primary mt-4", {

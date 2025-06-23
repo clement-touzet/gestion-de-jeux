@@ -37,8 +37,6 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/popular", async (req, res) => {
-  console.log("test");
-  const totalTimePlayedAlias = "total_time_played";
   // query to get all the popular games
   // the popularity depends of the cumulated played hours, all users included.
   const games = await db.execute(sql`
@@ -53,6 +51,25 @@ router.get("/popular", async (req, res) => {
       GROUP BY
         ${gameTable.id}
       ORDER BY total_time_played DESC
+    `);
+
+  console.log("games", games);
+  res.json(games);
+});
+
+router.get("/recently-added", async (req, res) => {
+  // query to get all the recently added games. (games added less than a week)
+  const games = await db.execute(sql`
+      SELECT
+        ${gameTable.id},
+        ${gameTable.name},
+        ${gameTable.createdAt}
+      FROM
+        ${gameTable}
+      WHERE
+        ${gameTable.createdAt} >= NOW() - INTERVAL '7 days'
+      ORDER BY
+        ${gameTable.createdAt} DESC
     `);
 
   console.log("games", games);

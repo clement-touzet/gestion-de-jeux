@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Section from "../../../features/ui/components/Section";
 import SearchGame from "../../../features/games/components/SearchGameInput";
 import PopularGames from "../../../features/games/components/PopularGames";
+import RecentlyAddedGames from "../../../features/games/components/RecentlyAddedGames";
 
 export const Route = createFileRoute("/dashboard/browse/")({
   component: RouteComponent,
@@ -22,7 +23,13 @@ function RouteComponent() {
         <PopularGames />
       </Section>
       <Section>
-        <h2 className="text-xl font-bold">Récemment ajouté</h2>
+        <div className="py-4">
+          <h2 className="text-xl font-bold">Les p'tits nouveaux</h2>
+          <p className="text-neutral-500">
+            Jeux ajoutés il y a moins d'une semaine
+          </p>
+        </div>
+        <RecentlyAddedGames />
       </Section>
     </div>
   );
