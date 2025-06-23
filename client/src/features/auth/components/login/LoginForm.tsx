@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
