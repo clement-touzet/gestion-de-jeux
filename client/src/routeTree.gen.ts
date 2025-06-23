@@ -17,6 +17,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardGamesReviewsRouteRouteImport } from './routes/dashboard/games-reviews/route'
 import { Route as DashboardGamesReviewsIndexRouteImport } from './routes/dashboard/games-reviews/index'
 import { Route as DashboardBrowseIndexRouteImport } from './routes/dashboard/browse/index'
+import { Route as DashboardSearchGameGameNameRouteImport } from './routes/dashboard/search-game/$gameName'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -60,6 +61,12 @@ const DashboardBrowseIndexRoute = DashboardBrowseIndexRouteImport.update({
   path: '/browse/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardSearchGameGameNameRoute =
+  DashboardSearchGameGameNameRouteImport.update({
+    id: '/search-game/$gameName',
+    path: '/search-game/$gameName',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/dashboard/search-game/$gameName': typeof DashboardSearchGameGameNameRoute
   '/dashboard/browse': typeof DashboardBrowseIndexRoute
   '/dashboard/games-reviews/': typeof DashboardGamesReviewsIndexRoute
 }
@@ -76,6 +84,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/dashboard/search-game/$gameName': typeof DashboardSearchGameGameNameRoute
   '/dashboard/browse': typeof DashboardBrowseIndexRoute
   '/dashboard/games-reviews': typeof DashboardGamesReviewsIndexRoute
 }
@@ -87,6 +96,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/dashboard/search-game/$gameName': typeof DashboardSearchGameGameNameRoute
   '/dashboard/browse/': typeof DashboardBrowseIndexRoute
   '/dashboard/games-reviews/': typeof DashboardGamesReviewsIndexRoute
 }
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/login'
     | '/register'
+    | '/dashboard/search-game/$gameName'
     | '/dashboard/browse'
     | '/dashboard/games-reviews/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/register'
+    | '/dashboard/search-game/$gameName'
     | '/dashboard/browse'
     | '/dashboard/games-reviews'
   id:
@@ -117,6 +129,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/login/'
     | '/register/'
+    | '/dashboard/search-game/$gameName'
     | '/dashboard/browse/'
     | '/dashboard/games-reviews/'
   fileRoutesById: FileRoutesById
@@ -186,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBrowseIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/search-game/$gameName': {
+      id: '/dashboard/search-game/$gameName'
+      path: '/search-game/$gameName'
+      fullPath: '/dashboard/search-game/$gameName'
+      preLoaderRoute: typeof DashboardSearchGameGameNameRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
@@ -206,12 +226,14 @@ const DashboardGamesReviewsRouteRouteWithChildren =
 interface DashboardRouteRouteChildren {
   DashboardGamesReviewsRouteRoute: typeof DashboardGamesReviewsRouteRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardSearchGameGameNameRoute: typeof DashboardSearchGameGameNameRoute
   DashboardBrowseIndexRoute: typeof DashboardBrowseIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardGamesReviewsRouteRoute: DashboardGamesReviewsRouteRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardSearchGameGameNameRoute: DashboardSearchGameGameNameRoute,
   DashboardBrowseIndexRoute: DashboardBrowseIndexRoute,
 }
 
