@@ -12,7 +12,7 @@ import GameReviewListFilters from "../../../features/game-reviews/components/Gam
 import { useState } from "react";
 import { GameReviewFiltersType } from "../../../features/game-reviews/types/GameReviewFiltersType";
 import SearchInput from "../../../features/ui/components/SearchInput";
-import GameReviewPagination from "../../../features/game-reviews/components/GameReviewPagination";
+import Pagination from "../../../features/game-reviews/components/Pagination";
 import { usePagination } from "../../../hooks/usePagination";
 
 export const Route = createFileRoute("/dashboard/games-reviews/")({
@@ -77,7 +77,7 @@ function RouteComponent() {
             : null}
         </ReviewCardsSection>
         <div className="flex justify-center">
-          <GameReviewPagination
+          <Pagination
             elements={gamesReviews}
             currentPage={page}
             changePage={setPage}

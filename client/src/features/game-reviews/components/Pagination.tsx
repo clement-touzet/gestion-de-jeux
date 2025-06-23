@@ -10,12 +10,7 @@ type Props = {
 
 const MIN_PAGE = 1;
 
-const GameReviewPagination = ({
-  elements,
-  currentPage,
-  changePage,
-  children,
-}: Props) => {
+const Pagination = ({ elements, currentPage, changePage, children }: Props) => {
   if (!elements) return null;
 
   const pageNumber = Math.ceil(elements.length / ELEMENT_PER_PAGE);
@@ -74,4 +69,4 @@ const GameReviewPagination = ({
   );
 };
 
-export default GameReviewPagination;
+export default Pagination;

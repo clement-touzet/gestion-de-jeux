@@ -1,7 +1,7 @@
 import express from "express";
 import db from "../db/db";
-import { gameInsertSchema, gameTable } from "../db/schemas";
-import { eq } from "drizzle-orm";
+import { gameInsertSchema, gameReviewTable, gameTable } from "../db/schemas";
+import { desc, eq, sql, sum } from "drizzle-orm";
 
 const router = express.Router();
 
@@ -34,6 +34,29 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error });
   }
+});
+
+router.get("/popular", async (req, res) => {
+  console.log("test");
+  const totalTimePlayedAlias = "total_time_played";
+  // query to get all the popular games
+  // the popularity depends of the cumulated played hours, all users included.
+  const games = await db.execute(sql`
+      SELECT
+        ${gameTable.id},
+        ${gameTable.name},
+        SUM(game_review.time_played) as total_time_played,
+        ROW_NUMBER() OVER (ORDER BY SUM(game_review.time_played) DESC) as popularity_position
+      FROM
+        ${gameTable}
+        RIGHT JOIN ${gameReviewTable} ON ${gameTable.id} = ${gameReviewTable.gameId}
+      GROUP BY
+        ${gameTable.id}
+      ORDER BY total_time_played DESC
+    `);
+
+  console.log("games", games);
+  res.json(games);
 });
 
 export default router;
