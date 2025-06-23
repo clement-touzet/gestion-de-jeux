@@ -34,7 +34,7 @@ const DashboardAsideContent = ({
       </li>
       <li>
         <Link
-          to="/dashboard"
+          to="/dashboard/browse"
           className="btn btn-ghost btn-wide"
           onClick={handleCloseDrawer}
         >

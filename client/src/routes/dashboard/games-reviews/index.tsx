@@ -12,6 +12,8 @@ import GameReviewListFilters from "../../../features/game-reviews/components/Gam
 import { useState } from "react";
 import { GameReviewFiltersType } from "../../../features/game-reviews/types/GameReviewFiltersType";
 import SearchInput from "../../../features/ui/components/SearchInput";
+import GameReviewPagination from "../../../features/game-reviews/components/GameReviewPagination";
+import { usePagination } from "../../../hooks/usePagination";
 
 export const Route = createFileRoute("/dashboard/games-reviews/")({
   component: RouteComponent,
@@ -21,6 +23,7 @@ function RouteComponent() {
   const [search, setSearch] = useState<GameReviewFiltersType["search"]>("");
   const [filters, setFilters] =
     useState<Omit<GameReviewFiltersType, "search">>();
+  const [page, setPage] = useState(1);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -32,6 +35,8 @@ function RouteComponent() {
     queryKey: [GAMES_REVIEWS_QUERY_KEY, { search, ...filters }],
     queryFn: () => getUserGamesReviews(axiosPrivate, { search, ...filters }),
   });
+
+  const paginatedGamesReview = usePagination(gamesReviews, page);
 
   const handleChangeFilters = (filters: GameReviewFiltersType) => {
     setFilters(filters);
@@ -55,8 +60,8 @@ function RouteComponent() {
         </div>
 
         <ReviewCardsSection error={error} isError={isError}>
-          {gamesReviews
-            ? gamesReviews
+          {paginatedGamesReview
+            ? paginatedGamesReview
                 .sort((a, b) => a.game.name.localeCompare(b.game.name)) // sort alphabeticaly
                 .map(({ timePlayed, stars, game: { name, id } }) => {
                   return (
@@ -71,6 +76,13 @@ function RouteComponent() {
                 })
             : null}
         </ReviewCardsSection>
+        <div className="flex justify-center">
+          <GameReviewPagination
+            elements={gamesReviews}
+            currentPage={page}
+            changePage={setPage}
+          />
+        </div>
       </Section>
     </div>
   );

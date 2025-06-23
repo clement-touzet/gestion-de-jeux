@@ -1,13 +1,16 @@
 import { AxiosInstance } from "axios";
 import { GameReviewFiltersType } from "../types/GameReviewFiltersType";
-import { gamesReviewsWithGameSchema } from "../../../../../server/zod/game-review/GameReviewSchemas";
+import {
+  GameReviewWithGameType,
+  gamesReviewsWithGameSchema,
+} from "../../../../../server/zod/game-review/GameReviewSchemas";
 
 const GAMES_REVIEWS_API_URL = "/api/games-reviews";
 
 const getUserGamesReviews = async (
   axiosPrivate: AxiosInstance,
   filters: GameReviewFiltersType
-) => {
+): Promise<GameReviewWithGameType[]> => {
   const response = await axiosPrivate.get(GAMES_REVIEWS_API_URL, {
     method: "GET",
   });

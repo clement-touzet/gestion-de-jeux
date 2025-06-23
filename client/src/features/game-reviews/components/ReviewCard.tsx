@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GAMES_REVIEWS_QUERY_KEY } from "../../../constants/queryKeys";
 import deleteGameReview from "../queries/deleteGameReview";
 import useAxiosPrivate from "../../auth/hooks/useAxiosPrivate";
-import UpdateGameReviewModal from "./updateGameReviewModal";
+import UpdateGameReviewModal from "./UpdateGameReviewModal";
 
 type Props = {
   timePlayed: GameReviewType["timePlayed"];
